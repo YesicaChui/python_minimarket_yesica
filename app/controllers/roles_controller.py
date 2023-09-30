@@ -18,9 +18,8 @@ class RolesController:
         record_new = self.model.create(**body)
         self.db.session.add(record_new)
         self.db.session.commit()
-        return {
-          'creacion de rol', HTTPStatus.CREATED
-          }
+        return { 'message': f'El rol {body["name"]} se ha creado',}, HTTPStatus.CREATED
+          
     except Exception as e:
       self.db.session.rollback()
       return {
@@ -30,5 +29,23 @@ class RolesController:
     finally:
       self.db.session.close()
 
-  
+  def find_by_id(self, id):
+    try:
+      record =self.model.where(id=id).first()
+
+      if record:
+        response =self.schema(many=False)
+        return response.dump(record)
+      return {
+        'message':f'no encontrado'
+      }, HTTPStatus.NOT_FOUND
+
+    
+      
+    except Exception as e:
+       return {
+        'message': 'Ocurrio un error',
+        'error':str(e)
+      }, HTTPStatus.INTERNAL_SERVER_ERROR
+
     

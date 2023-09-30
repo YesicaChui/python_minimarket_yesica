@@ -34,10 +34,11 @@ class Roles(Resource):
   
 
 @role_ns.route('/<int:id>')
-class Roles(Resource):
+class RolesById(Resource):
   def get(self,id):
     '''obtener un rol por id'''
-    return f'obtener un rol {id}'
+    controller = RolesController()
+    return controller.find_by_id(id)
   
   def put(self,id):
     '''Actualizar un rol por id'''
