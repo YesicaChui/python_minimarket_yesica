@@ -9,7 +9,7 @@ class RolesController:
     self.schema = RoleResponseSchema
 
   def fetch_all(self):
-    records = self.model.all()
+    records = self.model.where(status=True).all()
     response = self.schema(many=True)   
     return response.dump(records)
   
@@ -31,7 +31,7 @@ class RolesController:
 
   def find_by_id(self, id):
     try:
-      record =self.model.where(id=id).first()
+      record =self.model.where(id=id,status=True).first()
 
       if record:
         response =self.schema(many=False)
@@ -48,4 +48,47 @@ class RolesController:
         'error':str(e)
       }, HTTPStatus.INTERNAL_SERVER_ERROR
 
+  def update(self, id, body):
+     try:
+         record =self.model.where(id=id,status=True).first()
+         if record:
+            record.update(**body)
+            self.db.session.add(record)
+            self.db.session.commit()
+            return {
+              'mensaje': f'el rol con el id: {id} ha sido actualizado'
+            }, HTTPStatus.OK 
+         return {
+            'message':f'no encontrado'
+          }, HTTPStatus.NOT_FOUND        
+     except Exception as e:
+        self.db.session.rollback()
+        return {
+          'message': 'Ocurrio un error',
+          'error':str(e)
+        }, HTTPStatus.INTERNAL_SERVER_ERROR
+     finally:
+        self.db.session.close()
+
+  def remove(self,id):
+     try:
+         record =self.model.where(id=id,status=True).first()
+         if record:
+            record.update(status=False)
+            self.db.session.add(record)
+            self.db.session.commit()
+            return {
+              'mensaje': f'el rol con el id: {id} ha sido inhabilitado'
+            }, HTTPStatus.OK 
+         return {
+            'message':f'no encontrado'
+          }, HTTPStatus.NOT_FOUND        
+     except Exception as e:
+        self.db.session.rollback()
+        return {
+          'message': 'Ocurrio un error',
+          'error':str(e)
+        }, HTTPStatus.INTERNAL_SERVER_ERROR
+     finally:
+        self.db.session.close()
     

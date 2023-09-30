@@ -40,17 +40,17 @@ class RolesById(Resource):
     controller = RolesController()
     return controller.find_by_id(id)
   
-  def put(self,id):
-    '''Actualizar un rol por id'''
-    return f'Actualizar rol {id}'
-  
+
   def delete(self,id):
     '''eliminando un rol por id'''
-    return f'eliminando rol {id}'
+    controller = RolesController()
+    return controller.remove(id)
   
+  @role_ns.expect(schema_request.update(),validate=True)
   def patch(self,id):
     '''Actualizar un rol por id'''
-    return f'Actualizar rol {id}'
+    controller = RolesController()
+    return controller.update(id, request.json)
 
 
 
