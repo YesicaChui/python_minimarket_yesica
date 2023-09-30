@@ -1,54 +1,30 @@
 # from app import app
 from app import api
-from flask import request
 from http import HTTPStatus
 from flask_restx import Resource
-from app.controllers.roles_controller import RolesController
-from app.schemas.roles_schema import RoleRequestSchema
+
 
 role_ns = api.namespace(
-  name='Roles',
-  path='/roles',
-  description='Rutas de roles'
+  name='Productos',
+  path='/productos'
 )
-
-schema_request = RoleRequestSchema(role_ns)
 
 @role_ns.route('')
 class Roles(Resource):
   def get(self):
-    '''Listado de roles'''
-    controller = RolesController()
-    return controller.fetch_all()
-  
-  @role_ns.expect(schema_request.create(),validate = True)
+    return 'Listado de users'
   def post(self):
-    '''Creacion de roles'''
-    # request__json = request.json
-    # if not request__json.get('name'):
-    #   raise Exception('no se envio el campo name')
-    # print(request.json)
-    controller= RolesController()
-    return controller.save(request.json)
-  
-  
+    return 'creacion de users'
 
 @role_ns.route('/<int:id>')
 class Roles(Resource):
   def get(self,id):
-    '''obtener un rol por id'''
     return f'obtener un rol {id}'
-  
   def put(self,id):
-    '''Actualizar un rol por id'''
     return f'Actualizar rol {id}'
-  
   def delete(self,id):
-    '''eliminando un rol por id'''
     return f'eliminando rol {id}'
-  
   def patch(self,id):
-    '''Actualizar un rol por id'''
     return f'Actualizar rol {id}'
 
 
