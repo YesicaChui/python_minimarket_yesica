@@ -1,35 +1,55 @@
 # from app import app
+from flask import request
 from app import api
 from http import HTTPStatus
 from flask_restx import Resource
+from app.controllers.users_controller import UserController
+from app.schemas.users_schema import UserRequestSchema
 
-
-role_ns = api.namespace(
+user_ns = api.namespace(
   name='Users',
-  path='/users'
+  path='/users',
+  description='Rutas de usuarios'
 )
+schema_request = UserRequestSchema(user_ns)
 
-@role_ns.route('')
+@user_ns.route('')
 class Roles(Resource):
   def get(self):
-    return 'Listado de users'
+    '''listar todo los usuarios'''
+    controller=UserController()
+    return controller.fetch_all()
+  
+  @user_ns.expect(schema_request.create(),validate = True)
   def post(self):
-    return 'creacion de users'
+    '''crear un usuario'''
+    controller=UserController()
+    return controller.save(request.json)
 
-@role_ns.route('/<int:id>')
+@user_ns.route('/<int:id>')
 class Roles(Resource):
   def get(self,id):
-    return f'obtener un rol {id}'
-  def put(self,id):
-    return f'Actualizar rol {id}'
+    '''obtener un usuario por su id'''
+    controller=UserController()
+    return controller.find_by_id(id)
+  
+  
+  # def put(self,id):
+  #   return f'Actualizar rol {id}'
   def delete(self,id):
-    return f'eliminando rol {id}'
+    '''Inhabilitar un usuario por su id'''
+    controller=UserController()
+    return controller.remove(id)
+  
+  @user_ns.expect(schema_request.create(),validate = True)
   def patch(self,id):
-    return f'Actualizar rol {id}'
+    '''actualizar un usuario por su id'''
+    controller=UserController()
+    return controller.update(id,request.json)
 
 
 
-# role_ns = api.namespace(
+# user_ns = api.namespace(
 #   name='Roles',
 # )
 
@@ -54,5 +74,3 @@ class Roles(Resource):
 # @app.route('/role/<int:id>', methods=['DELETE'])
 # def delete_roles(id):
 #   return f'eliminando rol {id}'
-
-
