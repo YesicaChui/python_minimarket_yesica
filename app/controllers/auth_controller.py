@@ -9,9 +9,19 @@ class AuthController:
 
     def sign_in(self, body):
         try:
-            print(body)
-            # record = self.model.where().first()
-            return {}
+            username = body['username']
+            record = self.model.where(username=username,status=True).first()
+            if record:
+                password = body['password']
+                if record.check_password(password):
+                    return {}
+                return {
+                    'message':f'La contraseña es incorrecta'
+                }, HTTPStatus.UNAUTHORIZED
+            
+            return {
+                'message':f'No se encontro el usuario: {username}'
+            }, HTTPStatus.NOT_FOUND
         except Exception as e:
             return{
                 'message':'Ocurrio un error',
