@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restx import Api #para interfaz de swagger
 from app.config import environment
+from flask_jwt_extended import JWTManager
+
 FLASK_ENV=getenv('FLASK_ENV')
 ENVIRONMENT = environment[FLASK_ENV]
 
@@ -19,3 +21,5 @@ api = Api(
   ) #para interfaz de swagger
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
+
+jwt = JWTManager(app)
