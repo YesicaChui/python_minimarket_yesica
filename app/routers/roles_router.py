@@ -3,6 +3,7 @@ from app import api
 from flask import request
 from http import HTTPStatus
 from flask_restx import Resource
+from flask_jwt_extended import jwt_required
 from app.controllers.roles_controller import RolesController
 from app.schemas.roles_schema import RoleRequestSchema
 
@@ -16,6 +17,8 @@ schema_request = RoleRequestSchema(role_ns)
 
 @role_ns.route('')
 class Roles(Resource):
+
+  @jwt_required()
   def get(self):
     '''Listado de roles'''
     controller = RolesController()

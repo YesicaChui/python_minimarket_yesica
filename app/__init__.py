@@ -12,12 +12,23 @@ ENVIRONMENT = environment[FLASK_ENV]
 
 app = Flask(__name__)
 app.config.from_object(ENVIRONMENT)
+
+autthorizations = {
+  'Bearer': {
+    'type': 'apiKey',
+    'in': 'header',
+    'name': 'Authorization'
+  }
+
+}
+
 api = Api(
   app,
   title='Boilerplate Flask',
   version='0.1',
   description='EndPoints flask',
-  doc='/swagger-ui'
+  doc='/swagger-ui',
+  authorizations= autthorizations
   ) #para interfaz de swagger
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
