@@ -16,6 +16,7 @@ role_ns = api.namespace(
 schema_request = RoleRequestSchema(role_ns)
 
 @role_ns.route('')
+@role_ns.doc(security= 'Bearer')
 class Roles(Resource):
 
   @jwt_required()
@@ -24,6 +25,8 @@ class Roles(Resource):
     controller = RolesController()
     return controller.fetch_all()
   
+
+  @jwt_required()
   @role_ns.expect(schema_request.create(),validate = True)
   def post(self):
     '''Creacion de roles'''
@@ -37,18 +40,22 @@ class Roles(Resource):
   
 
 @role_ns.route('/<int:id>')
+@role_ns.doc(security= 'Bearer')
 class RolesById(Resource):
+  @jwt_required()
   def get(self,id):
     '''obtener un rol por id'''
     controller = RolesController()
     return controller.find_by_id(id)
   
-
+  @jwt_required()
   def delete(self,id):
     '''eliminando un rol por id'''
     controller = RolesController()
     return controller.remove(id)
   
+  
+  @jwt_required()
   @role_ns.expect(schema_request.update(),validate=True)
   def patch(self,id):
     '''Actualizar un rol por id'''
