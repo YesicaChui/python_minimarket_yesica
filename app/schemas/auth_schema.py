@@ -15,3 +15,8 @@ class AuthRequestSchema:
         parser=RequestParser()
         parser.add_argument('Authorization',type=str,location='headers', help= 'Ejemplo: Bearer {refresh_token}')
         return parser
+    
+    def reset(self):
+        return self.ns.model('Auth Reset Password',{
+            'email': fields.String(required = True)
+        })
